@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime
 
 @Autonomous(name = "Null OpMode", group = "Tests")
 class NullOpMode: OpMode() {
-    val timer = ElapsedTime()
+    private val timer = ElapsedTime()
 
     override fun init() {
         telemetry.addData("Status", "Null OpMode is initialized")
