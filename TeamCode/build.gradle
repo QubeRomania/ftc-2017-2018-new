@@ -1,0 +1,59 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+
+import java.util.regex.Pattern
+
+android {
+    compileSdkVersion 27
+
+    defaultConfig {
+        applicationId 'com.qualcomm.ftcrobotcontroller'
+
+        minSdkVersion 19
+        targetSdkVersion 19
+
+        /**
+         * We keep the versionCode and versionName of robot controller applications in sync with
+         * the master information published in the AndroidManifest.xml file of the FtcRobotController
+         * module. This helps avoid confusion that might arise from having multiple versions of
+         * a robot controller app simultaneously installed on a robot controller device.
+         *
+         * We accomplish this with the help of a funky little Groovy script that maintains that
+         * correspondence automatically.
+         *
+         * @see <a href="http://developer.android.com/tools/building/configuring-gradle.html">Configure Your Build</a>
+         * @see <a href="http://developer.android.com/tools/publishing/versioning.html">Versioning Your App</a>
+         */
+        def manifestFile = project(':FtcRobotController').file('src/main/AndroidManifest.xml');
+        def manifestText = manifestFile.getText()
+        //
+        def vCodePattern = Pattern.compile("versionCode=\"(\\d+(\\.\\d+)*)\"")
+        def matcher = vCodePattern.matcher(manifestText)
+        matcher.find()
+        def vCode = Integer.parseInt(matcher.group(1))
+        //
+        def vNamePattern = Pattern.compile("versionName=\"(.*)\"")
+        matcher = vNamePattern.matcher(manifestText);
+        matcher.find()
+        def vName = matcher.group(1)
+        //
+        versionCode vCode
+        versionName vName
+    }
+}
+
+dependencies {
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // Our code
+    implementation project(':QubeCode')
+
+    // FTC libraries
+    implementation project(':FtcRobotController')
+    implementation (name: 'RobotCore-release', ext: 'aar')
+    implementation (name: 'Hardware-release', ext: 'aar')
+    implementation (name: 'FtcCommon-release', ext: 'aar')
+    implementation (name: 'Analytics-release', ext:'aar')
+    implementation (name: 'WirelessP2p-release', ext:'aar')
+}
