@@ -6,6 +6,15 @@ import java.util.regex.Pattern
 android {
     compileSdkVersion 27
 
+    signingConfigs {
+        debug {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile rootProject.file('libs/ftc.debug.keystore')
+            storePassword 'android'
+        }
+    }
+
     defaultConfig {
         applicationId 'com.qualcomm.ftcrobotcontroller'
 
