@@ -11,6 +11,8 @@ class Gyroscope(hwMap: HardwareMap) {
     val heading
         get() = -gyro.integratedZValue
 
+    fun resetHeading() = gyro.resetZAxisIntegrator()
+
     fun calibrate(opMode: LinearOpMode) {
         val telemetry = opMode.telemetry
 
