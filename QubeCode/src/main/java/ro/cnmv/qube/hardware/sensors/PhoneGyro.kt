@@ -1,0 +1,145 @@
+package ro.cnmv.qube.hardware.sensors
+
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
+import com.qualcomm.robotcore.hardware.GyroSensor
+import com.qualcomm.robotcore.hardware.HardwareDevice
+import com.qualcomm.robotcore.hardware.HardwareMap
+import com.qualcomm.robotcore.hardware.OrientationSensor
+import org.firstinspires.ftc.robotcore.external.navigation.*
+import kotlin.math.asin
+import kotlin.math.atan2
+import kotlin.math.roundToInt
+import kotlin.math.sqrt
+
+class PhoneGyro(hwMap: HardwareMap): SensorEventListener, OrientationSensor, GyroSensor, Gyroscope {
+    companion object {
+        const val SAMPLE_PERIOD_US = 20_000
+    }
+
+    private val sensorManager = hwMap.appContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+
+    // Gyroscope reference.
+    private val gyro = sensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR)
+
+    // Phone's back / forward inclination.
+    private var x = 0.0f
+    // Phone's roll.
+    private var y = 0.0f
+    // Positive Z is up towards the sky.
+    private var z = 0.0f
+    // Angle to be subtracted from Z to help reset the heading.
+    private var zOffset = 0.0f
+
+    // The time when the sensor was read.
+    private var timestamp = 0L
+
+    // Estimated accuracy reported by the OS.
+    enum class Accuracy {
+        UNKNOWN,
+        UNRELIABLE,
+        LOW,
+        AVERAGE,
+        EXCELLENT,
+    }
+
+    /// The estimated accuracy of the sensor.
+    var accuracy = Accuracy.UNKNOWN
+        private set
+
+    private var requestZAxisReset = false
+
+    init {
+        sensorManager.registerListener(this, gyro, SAMPLE_PERIOD_US)
+    }
+
+    private fun getAngularOrientation() =
+        Orientation(
+            AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.RADIANS,
+            x, y, z - zOffset,
+            timestamp
+        )
+
+    override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
+        this.accuracy = when (accuracy) {
+            SensorManager.SENSOR_STATUS_UNRELIABLE -> Accuracy.UNRELIABLE
+            SensorManager.SENSOR_STATUS_ACCURACY_LOW -> Accuracy.LOW
+            SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM -> Accuracy.AVERAGE
+            SensorManager.SENSOR_STATUS_ACCURACY_HIGH -> Accuracy.EXCELLENT
+            else -> Accuracy.UNKNOWN
+        }
+    }
+
+    override fun onSensorChanged(event: SensorEvent) {
+        // Ensure we only handle the right type of events.
+        if (event.sensor.type != Sensor.TYPE_GAME_ROTATION_VECTOR)
+            return
+
+        timestamp = event.timestamp
+
+        val (q1, q2, q3) = event.values
+        val q0 = sqrt(1 - q1*q1 - q2*q2 - q3*q3)
+
+        x = atan2(2 * (q2*q3 + q0*q1), q3*q3 - q2*q2 - q1*q1 + q0*q0)
+        y = -asin(2 * (q1*q3 - q0*q2))
+        z = atan2(2 * (q1*q2 + q0*q3), q1*q1 + q0*q0 - q3*q3 - q2*q2)
+
+        if (requestZAxisReset) {
+            zOffset = z
+            requestZAxisReset = false
+        }
+    }
+
+    override fun getAngularOrientation(reference: AxesReference, order: AxesOrder, angleUnit: AngleUnit) =
+        getAngularOrientation().toAxesReference(reference).toAxesOrder(order).toAngleUnit(angleUnit)!!
+
+    override fun getAngularOrientationAxes() = mutableSetOf(Axis.X, Axis.Y, Axis.Z)
+
+    override fun resetZAxisIntegrator() {
+        requestZAxisReset = true
+    }
+
+    override fun resetDeviceConfigurationForOpMode() {
+        x = 0.0f
+        y = 0.0f
+        z = 0.0f
+        zOffset = 0.0f
+    }
+
+    override fun status() = "Phone Gyro Accuracy: $accuracy"
+
+    override fun calibrate() {
+        timestamp = 0L
+        resetZAxisIntegrator()
+    }
+
+    override fun isCalibrating() = requestZAxisReset
+
+    override fun getHeading() = AngleUnit.DEGREES.fromRadians(z - zOffset).roundToInt()
+
+
+    override fun rawX() = throw UnsupportedOperationException()
+
+    override fun rawY() = throw UnsupportedOperationException()
+
+    override fun rawZ() = throw UnsupportedOperationException()
+
+
+
+    override fun getDeviceName() = "Phone Gyroscope ${gyro.name}"
+
+    override fun getRotationFraction() = throw UnsupportedOperationException()
+
+    override fun getConnectionInfo() = "Built-in Sensor"
+
+    override fun getVersion() = gyro.version
+
+    override fun getManufacturer() = HardwareDevice.Manufacturer.Unknown
+
+    override fun close() {
+        sensorManager.unregisterListener(this)
+    }
+}
