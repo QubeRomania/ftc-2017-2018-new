@@ -1,23 +1,16 @@
 package ro.cnmv.qube.hardware
 
 import com.qualcomm.robotcore.hardware.DcMotor
-import com.qualcomm.robotcore.hardware.DcMotorEx
-import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.Telemetry
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.sqrt
 
 /**
  * Drive motors subsystem.
  *
  * This class controls the hardware which moves the robot around.
  */
-class DriveMotors {
+class DriveMotors(hwMap: HardwareMap) {
     companion object {
         /// A list of all the motors to initialize.
         val MOTORS = arrayOf(
@@ -28,58 +21,44 @@ class DriveMotors {
         )
     }
 
-    private val motors: List<DcMotor>
+    // Init all motors.
+    private val motors: List<DcMotor> = MOTORS.map {
+        // Destructure the motor descriptor pair.
+        val (name, direction) = it
 
-    private val frontLeftMotor
+        // Get the motor.
+        val motor = hwMap.dcMotor[name] ?: throw Exception("Failed to find motor $name")
+
+        // Set its direction.
+        motor.direction = direction
+
+        motor
+    }
+
+    val frontLeftMotor
         get() = motors[0]
 
-    private val frontRightMotor
+    val frontRightMotor
         get() = motors[1]
 
-    private val backLeftMotor
+    val backLeftMotor
         get() = motors[2]
 
-    private val backRightMotor
+    val backRightMotor
         get() = motors[3]
 
-    constructor(hwMap: HardwareMap) {
-        // Init all motors.
-        motors = MOTORS.map {
-            // Destructure the motor descriptor pair.
-            val (name, direction) = it
+    /// Sets the power of the motors.
+    private fun setPower(power: MotorPower) =
+        power.values.zip(motors).map { (power, motor) -> motor.power = power }
 
-            // Get the motor.
-            val motor = hwMap.dcMotor[name] ?: throw Exception("Failed to find motor $name")
-
-            // Set its direction.
-            motor.direction = direction
-
-            motor
-        }
-    }
-
-    fun translate(x: Double, y: Double) {
-        val l = sqrt(x*x + y*y)
-
-        val th = atan2(y, x)
-
-        val sn = sin( Math.PI / 4 - th)
-        val cs = cos(Math.PI / 4 - th)
-
-        frontLeftMotor.power = l * sn
-        frontRightMotor.power = l * cs
-        backLeftMotor.power = l * cs
-        backRightMotor.power = l * sn
-    }
+    /// Translate the robot in a direction.
+    fun translate(heading: Double, speed: Double) = move(heading, speed, 0.0)
 
     /// Rotate in trigonometric direction.
-    fun rotate(power: Double) {
-        backLeftMotor.power = -power
-        frontLeftMotor.power = -power
+    fun rotate(speed: Double) = move(0.0, 0.0, speed)
 
-        backRightMotor.power = power
-        frontRightMotor.power = power
-    }
+    fun move(heading: Double, speed: Double, rotateSpeed: Double) =
+        setPower(MotorPower.fromDirection(heading, speed, rotateSpeed))
 
     fun resetPosition() {
         motors.forEach {
@@ -88,22 +67,19 @@ class DriveMotors {
         }
     }
 
-    fun driveToPosition() {
-    }
-
     /// Stops the motors and resets their encoders.
     fun stop() {
         motors.forEach { it.power = 0.0 }
     }
 
     fun printPosition(telemetry: Telemetry) {
-        telemetry.addLine("Motor Position")
+        telemetry.addLine("Motor Position ")
         telemetry.addLine("Back")
-            .addData("Left", backLeftMotor.currentPosition)
-            .addData("Right", backRightMotor.currentPosition)
-        telemetry.addLine("Front")
-            .addData("Left", frontLeftMotor.currentPosition)
-            .addData("Right", frontRightMotor.currentPosition)
+            .addData("Left", "%d", backLeftMotor.currentPosition)
+            .addData("Right", "%d", backRightMotor.currentPosition)
+        telemetry.addLine("Front ")
+            .addData("Left", "%d", frontLeftMotor.currentPosition)
+            .addData("Right", "%d", frontRightMotor.currentPosition)
     }
 
     fun printTelemetry(telemetry: Telemetry) {
