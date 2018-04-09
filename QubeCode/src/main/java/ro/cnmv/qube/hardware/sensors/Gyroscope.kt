@@ -1,9 +1,7 @@
 package ro.cnmv.qube.hardware.sensors
 
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.GyroSensor
-import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.Telemetry
 
 interface Gyroscope: GyroSensor {

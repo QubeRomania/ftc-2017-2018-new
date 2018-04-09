@@ -5,6 +5,9 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.Handler
+import android.os.HandlerThread
+import android.os.Process
 import com.qualcomm.robotcore.hardware.GyroSensor
 import com.qualcomm.robotcore.hardware.HardwareDevice
 import com.qualcomm.robotcore.hardware.HardwareMap
@@ -16,11 +19,9 @@ import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 class PhoneGyro(hwMap: HardwareMap): SensorEventListener, OrientationSensor, GyroSensor, Gyroscope {
-    companion object {
-        const val SAMPLE_PERIOD_US = 20_000
-    }
-
     private val sensorManager = hwMap.appContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    private val handlerThread = HandlerThread("Phone Gyro Thread", Process.THREAD_PRIORITY_DEFAULT)
+    private val handler: Handler
 
     // Gyroscope reference.
     private val gyro = sensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR)
@@ -53,8 +54,16 @@ class PhoneGyro(hwMap: HardwareMap): SensorEventListener, OrientationSensor, Gyr
     private var requestZAxisReset = false
 
     init {
-        sensorManager.registerListener(this, gyro, SAMPLE_PERIOD_US)
+        handlerThread.start()
+        handler = Handler(handlerThread.looper)
+        registerListener()
     }
+
+    private fun registerListener() =
+        sensorManager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_GAME, handler)
+
+    private fun unregisterListener() =
+        sensorManager.unregisterListener(this, gyro)
 
     private fun getAngularOrientation() =
         Orientation(
@@ -140,6 +149,7 @@ class PhoneGyro(hwMap: HardwareMap): SensorEventListener, OrientationSensor, Gyr
     override fun getManufacturer() = HardwareDevice.Manufacturer.Unknown
 
     override fun close() {
-        sensorManager.unregisterListener(this)
+        unregisterListener()
+        handlerThread.quitSafely()
     }
 }
