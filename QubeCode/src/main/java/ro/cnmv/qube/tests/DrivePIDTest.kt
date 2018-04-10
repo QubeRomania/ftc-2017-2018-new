@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime
 import com.qualcomm.robotcore.util.Range
 import ro.cnmv.qube.AutonomousOpMode
 import ro.cnmv.qube.hardware.DriveMotors
-import ro.cnmv.qube.hardware.Gyroscope
+import ro.cnmv.qube.hardware.sensors.Gyroscope
 import ro.cnmv.qube.hardware.Hardware
 import kotlin.math.absoluteValue
 import kotlin.math.sign
