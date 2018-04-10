@@ -79,9 +79,7 @@ class VL53L0X(deviceClient: I2cDeviceSynch) :
                     .finalRange(sequenceConfig.toInt() shr 7 and 0x1 > 0)
         }
 
-    override fun getDistance(unit: DistanceUnit): Double {
-        return 0.0
-    }
+    override fun getDistance(unit: DistanceUnit) = unit.fromCm(range().toDouble())
 
     override fun doInitialize(): Boolean {
         // Check identification registers for expected values.
