@@ -10,6 +10,9 @@ class Battery(hwMap: HardwareMap) {
     val voltage
         get() = voltageSensor.map { it.voltage }.min() ?: 12.0
 
+    val powerFraction
+        get() = 13.0 / voltage
+
     fun enableTelemetry(telemetry: Telemetry) {
         telemetry.addData("Battery Voltage", "%.1f Volts", { voltage })
     }
