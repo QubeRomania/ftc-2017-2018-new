@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import ro.cnmv.qube.hardware.sensors.VL53L0X
 
-@Autonomous(name = "VL53L0X Test", group = "Tests")
+@Autonomous(name = "VL53L0X Test", group = "Tests/Sensors")
 class VL53L0XTest: LinearOpMode() {
     override fun runOpMode() {
         val vl53 = hardwareMap.i2cDeviceSynch["distance_sensor"]

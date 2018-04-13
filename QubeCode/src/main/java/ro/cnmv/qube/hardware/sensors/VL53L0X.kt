@@ -238,9 +238,7 @@ class VL53L0X(deviceClient: I2cDeviceSynch) :
 
     override fun getManufacturer() = HardwareDevice.Manufacturer.Other
 
-    override fun getDeviceName(): String {
-        return "ST VL53L0X"
-    }
+    override fun getDeviceName() = "ST VL53L0X"
 
     private class SPADInfo {
         internal var count: Int = 0
@@ -279,11 +277,11 @@ class VL53L0X(deviceClient: I2cDeviceSynch) :
     }
 
     private class SequenceStep {
-        var tcc: Boolean = false
-        var dss: Boolean = false
-        var msrc: Boolean = false
-        var preRange: Boolean = false
-        var finalRange: Boolean = false
+        var tcc = false
+        var dss = false
+        var msrc = false
+        var preRange = false
+        var finalRange = false
 
         fun tcc(tcc: Boolean): SequenceStep {
             this.tcc = tcc
@@ -447,7 +445,7 @@ class VL53L0X(deviceClient: I2cDeviceSynch) :
      *
      * @return the distance in mm
      */
-    fun range(): Int {
+    private fun range(): Int {
         write8(0x80, 0x01)
         write8(0xFF, 0x01)
         write8(0x00, 0x00)
