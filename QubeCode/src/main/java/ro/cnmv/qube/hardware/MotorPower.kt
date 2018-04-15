@@ -22,7 +22,7 @@ data class MotorPower(val values: DoubleArray) {
 
     companion object {
         fun fromDirection(direction: Double, speed: Double, rotateSpeed: Double): MotorPower {
-            val directionRads = (direction - 90.0) / 180.0 * Math.PI
+            val directionRads = direction / 180.0 * Math.PI
 
             val sin = sin(Math.PI / 4 - directionRads)
             val cos = cos(Math.PI / 4 - directionRads)

@@ -50,7 +50,7 @@ class ControlTest: LinearOpMode() {
             val x = gamepad1.left_stick_x.toDouble()
             val y = -gamepad1.left_stick_y.toDouble()
 
-            return atan2(y, x) / Math.PI * 180.0
+            return atan2(y, x) / Math.PI * 180.0 - 90.0
         }
 
     /// Rotation around the robot's Z axis.
