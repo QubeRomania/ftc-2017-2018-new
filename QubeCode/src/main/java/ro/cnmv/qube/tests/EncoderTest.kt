@@ -9,13 +9,9 @@ class EncoderTest: AutonomousOpMode() {
     override fun Hardware.run() {
         motors.resetPosition()
 
-        var aLastState = gamepad1.a
         var bLastState = gamepad1.b
 
         while (opModeIsActive()) {
-            if (gamepad1.a != aLastState && gamepad1.a)
-                motors.runWithConstantVelocity()
-
             if (gamepad1.b != bLastState && gamepad1.b)
                 motors.resetPosition()
 
@@ -24,7 +20,6 @@ class EncoderTest: AutonomousOpMode() {
             motors.printPosition(telemetry)
             telemetry.update()
 
-            aLastState = gamepad1.a
             bLastState = gamepad1.b
         }
     }
