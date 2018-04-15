@@ -44,7 +44,7 @@ class DrivePIDTest: AutonomousOpMode() {
 
             telemetry.addData("Error", error)
             telemetry.addData("Correction", steeringCorrection)
-            motors.printTelemetry(telemetry)
+            motors.printPower(telemetry)
             telemetry.update()
         } while (opModeIsActive() && safetyTimer.seconds() < 4)
 
