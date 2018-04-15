@@ -14,7 +14,10 @@ class PhoneGyroTest: LinearOpMode() {
         waitForStart()
 
         gyro.enableTelemetry(telemetry)
-        telemetry.addData("Accuracy", { gyro.accuracy })
+
+        telemetry.addData("Raw X", "%d", { gyro.rawX() })
+        telemetry.addData("Raw Y", "%d", { gyro.rawY() })
+        telemetry.addData("Raw Z", "%d", { gyro.rawZ() })
 
         while (opModeIsActive()) {
             telemetry.update()

@@ -13,10 +13,7 @@ import com.qualcomm.robotcore.hardware.HardwareDevice
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.OrientationSensor
 import org.firstinspires.ftc.robotcore.external.navigation.*
-import kotlin.math.asin
-import kotlin.math.atan2
-import kotlin.math.roundToInt
-import kotlin.math.sqrt
+import kotlin.math.*
 
 class PhoneGyro(hwMap: HardwareMap): SensorEventListener, OrientationSensor, GyroSensor, Gyroscope {
     private val sensorManager = hwMap.appContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -95,7 +92,7 @@ class PhoneGyro(hwMap: HardwareMap): SensorEventListener, OrientationSensor, Gyr
         x = atan2(2 * (q2*q3 + q0*q1), q3*q3 - q2*q2 - q1*q1 + q0*q0)
         y = -asin(2 * (q1*q3 - q0*q2))
         z = atan2(2 * (q1*q2 + q0*q3), q1*q1 + q0*q0 - q3*q3 - q2*q2)
-
+        
         if (requestZAxisReset) {
             zOffset = z
             requestZAxisReset = false
@@ -130,11 +127,11 @@ class PhoneGyro(hwMap: HardwareMap): SensorEventListener, OrientationSensor, Gyr
     override fun getHeading() = AngleUnit.DEGREES.fromRadians(z - zOffset).roundToInt()
 
 
-    override fun rawX() = throw UnsupportedOperationException()
+    override fun rawX() = (x * 180.0 / Math.PI).toInt()
 
-    override fun rawY() = throw UnsupportedOperationException()
+    override fun rawY() = (y * 180.0 / Math.PI).toInt()
 
-    override fun rawZ() = throw UnsupportedOperationException()
+    override fun rawZ() = (z * 180.0 / Math.PI).toInt()
 
 
 
