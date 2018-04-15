@@ -91,10 +91,10 @@ class DriveMotors(hwMap: HardwareMap) {
 
     fun printTelemetry(telemetry: Telemetry) {
         telemetry.addLine("Back Power")
-            .addData("Left", backLeftMotor.power)
-            .addData("Right", backRightMotor.power)
+            .addData("Left", "%.2f", backLeftMotor.power)
+            .addData("Right", "%.2f", backRightMotor.power)
         telemetry.addLine("Front Power")
-            .addData("Left", frontLeftMotor.power)
-            .addData("Right", frontRightMotor.power)
+            .addData("Left", "%.2f", frontLeftMotor.power)
+            .addData("Right", "%.2f", frontRightMotor.power)
     }
 }
