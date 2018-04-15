@@ -3,6 +3,7 @@ package ro.cnmv.qube.tests
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.robotcore.external.Telemetry
+import ro.cnmv.qube.Gamepad
 import ro.cnmv.qube.hardware.Hardware
 import kotlin.math.atan2
 
@@ -10,14 +11,14 @@ import kotlin.math.atan2
 class ControlTest: LinearOpMode() {
     override fun runOpMode() {
         val hw = Hardware(hardwareMap, this)
+        val gp1 = Gamepad(gamepad1)
 
         enableTelemetry(telemetry)
         hw.gyro.enableTelemetry(telemetry)
 
         waitForStart()
 
-        var xLastState = gamepad1.x
-        var yLastState = gamepad1.y
+        var velocityMode = false
 
         while (opModeIsActive()) {
             telemetry.addLine("Gamepad ")
@@ -29,18 +30,26 @@ class ControlTest: LinearOpMode() {
             else
                 direction - hw.gyro.heading
 
-            if (gamepad1.x != xLastState && gamepad1.x)
+            if (gp1.checkToggle(Gamepad.Button.X))
                 controlMode = controlMode.inv()
 
-            if (gamepad1.y != yLastState && gamepad1.y)
+            if (gp1.checkToggle(Gamepad.Button.Y))
                 hw.gyro.resetZAxisIntegrator()
+
+            if (gp1.checkToggle(Gamepad.Button.B)) {
+                velocityMode = !velocityMode
+                if (velocityMode) {
+                    hw.motors.runWithConstantVelocity()
+                } else {
+                    hw.motors.disableEncoders()
+                }
+            }
+
+            hw.intake.withGamepad(gamepad2)
 
             hw.motors.move(direction, speed, rotation)
 
             telemetry.update()
-
-            xLastState = gamepad1.x
-            yLastState = gamepad1.y
         }
     }
 
