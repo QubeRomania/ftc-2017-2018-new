@@ -32,6 +32,8 @@ class DriveMotors(hwMap: HardwareMap) {
         // Set its direction.
         motor.direction = direction
 
+        motor.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+
         motor
     }
 
@@ -60,6 +62,10 @@ class DriveMotors(hwMap: HardwareMap) {
     fun move(heading: Double, speed: Double, rotateSpeed: Double) =
         setPower(MotorPower.fromDirection(heading, speed, rotateSpeed))
 
+    fun disableEncoders() {
+        motors.forEach { it.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER }
+    }
+
     fun resetPosition() {
         motors.forEach {
             it.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
@@ -80,20 +86,19 @@ class DriveMotors(hwMap: HardwareMap) {
     }
 
     fun printPosition(telemetry: Telemetry) {
-        telemetry.addLine("Motor Position ")
-        telemetry.addLine("Back")
+        telemetry.addLine("Position Back ")
             .addData("Left", "%d", backLeftMotor.currentPosition)
             .addData("Right", "%d", backRightMotor.currentPosition)
-        telemetry.addLine("Front ")
+        telemetry.addLine("Position Front ")
             .addData("Left", "%d", frontLeftMotor.currentPosition)
             .addData("Right", "%d", frontRightMotor.currentPosition)
     }
 
-    fun printTelemetry(telemetry: Telemetry) {
-        telemetry.addLine("Back Power")
+    fun printPower(telemetry: Telemetry) {
+        telemetry.addLine("Power Back ")
             .addData("Left", "%.2f", backLeftMotor.power)
             .addData("Right", "%.2f", backRightMotor.power)
-        telemetry.addLine("Front Power")
+        telemetry.addLine("Power Front ")
             .addData("Left", "%.2f", frontLeftMotor.power)
             .addData("Right", "%.2f", frontRightMotor.power)
     }
