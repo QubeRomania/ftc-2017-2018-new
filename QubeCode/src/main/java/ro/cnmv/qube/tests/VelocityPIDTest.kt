@@ -17,8 +17,9 @@ class VelocityPIDTest: AutonomousOpMode() {
 
         val timer = ElapsedTime()
 
-        while (opModeIsActive() && timer.milliseconds() <= 10000) {
-            motors.printTelemetry(telemetry)
+        while (opModeIsActive() && timer.milliseconds() <= 5000) {
+            motors.printPower(telemetry)
+            motors.printPosition(telemetry)
             telemetry.update()
         }
     }
