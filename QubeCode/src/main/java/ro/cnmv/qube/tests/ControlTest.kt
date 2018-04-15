@@ -16,6 +16,9 @@ class ControlTest: LinearOpMode() {
 
         waitForStart()
 
+        var xLastState = gamepad1.x
+        var yLastState = gamepad1.y
+
         while (opModeIsActive()) {
             telemetry.addLine("Gamepad ")
                 .addData("X", gamepad1.left_stick_x)
@@ -26,15 +29,18 @@ class ControlTest: LinearOpMode() {
             else
                 direction - hw.gyro.heading
 
-            if (gamepad1.x)
+            if (gamepad1.x != xLastState && gamepad1.x)
                 controlMode = controlMode.inv()
 
-            if (gamepad1.y)
+            if (gamepad1.y != yLastState && gamepad1.y)
                 hw.gyro.resetZAxisIntegrator()
 
             hw.motors.move(direction, speed, rotation)
 
             telemetry.update()
+
+            xLastState = gamepad1.x
+            yLastState = gamepad1.y
         }
     }
 

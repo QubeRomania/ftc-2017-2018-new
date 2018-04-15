@@ -67,6 +67,13 @@ class DriveMotors(hwMap: HardwareMap) {
         }
     }
 
+    fun runWithConstantVelocity() {
+        motors.forEach {
+            it.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+            it.mode = DcMotor.RunMode.RUN_USING_ENCODER
+        }
+    }
+
     /// Stops the motors and resets their encoders.
     fun stop() {
         motors.forEach { it.power = 0.0 }

@@ -92,7 +92,7 @@ class PhoneGyro(hwMap: HardwareMap): SensorEventListener, OrientationSensor, Gyr
         x = atan2(2 * (q2*q3 + q0*q1), q3*q3 - q2*q2 - q1*q1 + q0*q0)
         y = -asin(2 * (q1*q3 - q0*q2))
         z = atan2(2 * (q1*q2 + q0*q3), q1*q1 + q0*q0 - q3*q3 - q2*q2)
-        
+
         if (requestZAxisReset) {
             zOffset = z
             requestZAxisReset = false
