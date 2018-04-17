@@ -15,6 +15,18 @@ class Gamepad(private val gp: Gamepad) {
 
     private var lastStates = Button.values().map { it to false }.toMap().toMutableMap()
 
+    val left_trigger
+        get() = gp.left_trigger
+
+    val right_trigger
+        get() = gp.right_trigger
+
+    val left_bumper
+        get() = gp.left_bumper
+
+    val right_bumper
+        get() = gp.right_bumper
+
     fun checkHold(button: Button): Boolean =
         when (button) {
             Button.A -> gp.a

@@ -19,7 +19,12 @@ class CubesIntake(hwMap: HardwareMap) {
     }
 
     fun withGamepad(gp: Gamepad) {
-        leftIntake.power = gp.left_stick_x.toDouble()
-        rightIntake.power = gp.right_stick_x.toDouble()
+        leftIntake.power = roundPower(gp.left_stick_x)
+        rightIntake.power = roundPower(gp.right_stick_x)
+    }
+
+    private companion object {
+        /// Rounds a number to nearest multiple of 0.5
+        private fun roundPower(power: Float): Double = Math.round(power * 2) / 2.0
     }
 }

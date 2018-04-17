@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.hardware.PIDCoefficients
 import com.qualcomm.robotcore.util.ElapsedTime
 import com.qualcomm.robotcore.util.Range
-import ro.cnmv.qube.AutonomousOpMode
+import ro.cnmv.qube.OpMode
 import ro.cnmv.qube.hardware.DriveMotors
 import ro.cnmv.qube.hardware.sensors.Gyroscope
 import ro.cnmv.qube.hardware.Hardware
@@ -12,7 +12,7 @@ import kotlin.math.absoluteValue
 import kotlin.math.sign
 
 @Autonomous(name = "Drive PID Test", group = "Tests")
-class DrivePIDTest: AutonomousOpMode() {
+class DrivePIDTest: OpMode() {
     private fun rotate(motors: DriveMotors, gyro: Gyroscope, targetHeading: Double) {
         val basePower = 0.5
         val pid = PIDCoefficients(0.6, 0.0, 0.1)

@@ -3,12 +3,12 @@ package org.firstinspires.ftc.teamcode.tests
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.hardware.PIDCoefficients
 import ro.cnmv.qube.systems.CubesIntake
-import ro.cnmv.qube.AutonomousOpMode
+import ro.cnmv.qube.OpMode
 import ro.cnmv.qube.hardware.Hardware
 import kotlin.math.absoluteValue
 
 @Autonomous(name = "Cube Intake Auto", group = "Tests")
-class AutonomyCubeTest: AutonomousOpMode() {
+class AutonomyCubeTest: OpMode() {
     override fun Hardware.run() {
         val intake = CubesIntake(hardwareMap)
 

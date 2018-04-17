@@ -1,4 +1,4 @@
-package ro.cnmv.qube.tests
+package org.firstinspires.ftc.teamcode
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
@@ -7,11 +7,12 @@ import ro.cnmv.qube.Gamepad
 import ro.cnmv.qube.hardware.Hardware
 import kotlin.math.atan2
 
-@TeleOp(name = "Control Test", group = "Tests")
-class ControlTest: LinearOpMode() {
+@TeleOp(name = "Drive OpMode", group = "Tests")
+class ControlOpMode: LinearOpMode() {
     override fun runOpMode() {
         val hw = Hardware(hardwareMap, this)
         val gp1 = Gamepad(gamepad1)
+        val gp2 = Gamepad(gamepad2)
 
         enableTelemetry(telemetry)
         hw.gyro.enableTelemetry(telemetry)
@@ -19,23 +20,28 @@ class ControlTest: LinearOpMode() {
         waitForStart()
 
         var velocityMode = false
+        var jewelState = false
 
         while (opModeIsActive()) {
-            telemetry.addLine("Gamepad ")
-                .addData("X", gamepad1.left_stick_x)
-                .addData("Y", gamepad1.left_stick_y)
-
             val direction = if (controlMode == DriveMode.RELATIVE)
                 direction
             else
                 direction - hw.gyro.heading
 
-            if (gp1.checkToggle(Gamepad.Button.X))
+            /// JEWEL ARM
+            if (gp1.checkToggle(Gamepad.Button.X)) {
+                jewelState = !jewelState
+                hw.jewel.openJewelServo(jewelState)
+            }
+
+            /// ABSOLUTE / RELATIVE CONTROL MODE
+            if (gp1.checkToggle(Gamepad.Button.START))
                 controlMode = controlMode.inv()
 
             if (gp1.checkToggle(Gamepad.Button.Y))
                 hw.gyro.resetZAxisIntegrator()
 
+            /// VELOCITY / POWER MODE
             if (gp1.checkToggle(Gamepad.Button.B)) {
                 velocityMode = !velocityMode
                 if (velocityMode) {
@@ -45,8 +51,16 @@ class ControlTest: LinearOpMode() {
                 }
             }
 
+            /// CUBES INTAKE
             hw.intake.withGamepad(gamepad2)
 
+            /// CUBES DROP
+            hw.drop.withGamepad(gp2)
+
+            /// CUBES LIFT
+            hw.lift.withGamepad(gp2)
+
+            /// DRIVE
             hw.motors.move(direction, speed, rotation)
 
             telemetry.update()
