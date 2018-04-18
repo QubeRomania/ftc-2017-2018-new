@@ -20,6 +20,8 @@ class ControlOpMode: LinearOpMode() {
         waitForStart()
 
         var velocityMode = false
+        telemetry.addData("Drive mode", { if (velocityMode) "VELOCITY" else "POWER" })
+
         var jewelState = false
 
         while (opModeIsActive()) {
@@ -63,6 +65,7 @@ class ControlOpMode: LinearOpMode() {
             /// DRIVE
             hw.motors.move(direction, speed, rotation)
 
+            hw.motors.printPower(telemetry)
             telemetry.update()
         }
     }
