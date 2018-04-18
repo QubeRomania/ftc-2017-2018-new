@@ -24,13 +24,14 @@ data class MotorPower(val values: DoubleArray) {
         fun fromDirection(direction: Double, speed: Double, rotateSpeed: Double): MotorPower {
             val directionRads = direction / 180.0 * Math.PI
 
+            val root2 = Math.sqrt(2.0)
             val sin = sin(Math.PI / 4 - directionRads)
             val cos = cos(Math.PI / 4 - directionRads)
 
-            val fl = speed * sin - rotateSpeed
-            val fr = speed * cos + rotateSpeed
-            val bl = speed * cos - rotateSpeed
-            val br = speed * sin + rotateSpeed
+            val fl = root2 * speed * sin - rotateSpeed
+            val fr = root2 * speed * cos + rotateSpeed
+            val bl = root2 * speed * cos - rotateSpeed
+            val br = root2 * speed * sin + rotateSpeed
 
             val values = doubleArrayOf(fl, fr, bl, br)
             val powers = MotorPower(values)
