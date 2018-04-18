@@ -55,23 +55,26 @@ class Jewel(hwMap: HardwareMap, private val opMode: LinearOpMode) {
     }
 
     fun hitJewel(ourColor: Color) {
+        // Set the jewel hitting servo to the middle position.
         jewelHitServo.position = JEWEL_HIT_MIDDLE_POSITION
         opMode.waitMillis(200)
-        openJewelServo(true)
 
+        // Lower the jewel arm.
+        openJewelServo(true)
         opMode.waitMillis(800)
 
-        if(jewelColor == ourColor) jewelHitServo.position = 0.0
-        else jewelHitServo.position = 1.0
-
+        // Read the color and hit the right jewel.
+        jewelHitServo.position = if(jewelColor == ourColor) 0.0 else 1.0
         opMode.waitMillis(400)
 
+        // Revert to middle position.
         jewelHitServo.position = JEWEL_HIT_MIDDLE_POSITION
 
+        // Raise jewel arm.
         openJewelServo(false)
 
+        // Close hit servo.
         jewelHitServo.position = 1.0
-
         opMode.waitMillis(200)
     }
 }

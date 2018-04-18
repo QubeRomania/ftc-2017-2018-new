@@ -44,10 +44,14 @@ class RotationPIDTest : LinearOpMode() {
 
                 do {
                     val lastError = error
+
+                    // Determine the rotation error.
                     error = (targetHeading - gyro.heading) / 90
 
+                    // Calculate the PID.
                     var motorCorrection = (pid.p * error) + (pid.i * (error + lastError)) + (pid.d * (error - lastError))
 
+                    // Ensure a minimum speed.
                     if(error.absoluteValue <= 0.33)
                         motorCorrection = 0.1 * motorCorrection.sign
 
