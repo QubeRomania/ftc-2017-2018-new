@@ -15,7 +15,7 @@ class Hardware(hwMap: HardwareMap, opMode: LinearOpMode) {
     val drop = CubesDrop(hwMap)
     val lift = CubesLift(hwMap, opMode.telemetry)
     val jewel = Jewel(hwMap, opMode)
-    //val vuforia = Vuforia(hwMap.appContext)
+    val vuforia = Vuforia(hwMap.appContext)
 
     val leftDistance = hwMap.get(ModernRoboticsI2cRangeSensor::class.java, "distance_left")!!
     val rightDistance = hwMap.get(ModernRoboticsI2cRangeSensor::class.java, "distance_right")!!
