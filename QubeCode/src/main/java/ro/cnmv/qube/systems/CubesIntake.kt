@@ -1,9 +1,8 @@
 package ro.cnmv.qube.systems
 
 import com.qualcomm.robotcore.hardware.DcMotorSimple
-import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.HardwareMap
-import ro.cnmv.qube.hardware.Battery
+import ro.cnmv.qube.Gamepad
 
 class CubesIntake(hwMap: HardwareMap) {
     private val leftIntake = hwMap.dcMotor["left_intake"]
@@ -19,8 +18,8 @@ class CubesIntake(hwMap: HardwareMap) {
     }
 
     fun withGamepad(gp: Gamepad) {
-        leftIntake.power = roundPower(gp.left_stick_x)
-        rightIntake.power = roundPower(gp.right_stick_x)
+        leftIntake.power = roundPower(-gp.left_stick_y)
+        rightIntake.power = roundPower(-gp.right_stick_y)
     }
 
     private companion object {
