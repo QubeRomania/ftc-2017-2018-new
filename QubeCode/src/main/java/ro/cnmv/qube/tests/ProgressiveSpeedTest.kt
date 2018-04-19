@@ -1,10 +1,12 @@
 package ro.cnmv.qube.tests
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.util.ElapsedTime
 import ro.cnmv.qube.hardware.DriveMotors
 
+@Disabled
 @Autonomous(name = "Progressive Speed Test", group = "Tests")
 class ProgressiveSpeedTest: LinearOpMode() {
     override fun runOpMode() {

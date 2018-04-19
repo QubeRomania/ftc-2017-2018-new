@@ -14,10 +14,10 @@ class RelicTest: LinearOpMode() {
 
         while(opModeIsActive()) {
             if(gamepad1.a) {
-                relicArm.open(true)
+                relicArm.open(0.0)
             }
             if(gamepad1.b) {
-                relicArm.open(false)
+                relicArm.open(1.0)
             }
 
             relicArm.printTelemetry(telemetry)

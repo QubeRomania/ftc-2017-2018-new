@@ -22,22 +22,14 @@ class ControlOpMode: LinearOpMode() {
         var velocityMode = false
         telemetry.addData("Drive mode", { if (velocityMode) "VELOCITY" else "POWER" })
 
-        var jewelState = false
-
         while (opModeIsActive()) {
             val direction = if (controlMode == DriveMode.RELATIVE)
                 direction
             else
                 direction - hw.gyro.heading
 
-            /// JEWEL ARM
-            if (gp1.checkToggle(Gamepad.Button.X)) {
-                jewelState = !jewelState
-                hw.jewel.openJewelServo(jewelState)
-            }
-
             /// ABSOLUTE / RELATIVE CONTROL MODE
-            if (gp1.checkToggle(Gamepad.Button.START))
+            if (gp1.checkToggle(Gamepad.Button.X))
                 controlMode = controlMode.inv()
 
             if (gp1.checkToggle(Gamepad.Button.Y))
@@ -54,7 +46,7 @@ class ControlOpMode: LinearOpMode() {
             }
 
             /// CUBES INTAKE
-            hw.intake.withGamepad(gamepad2)
+            hw.intake.withGamepad(gp2)
 
             /// CUBES DROP
             hw.drop.withGamepad(gp2)

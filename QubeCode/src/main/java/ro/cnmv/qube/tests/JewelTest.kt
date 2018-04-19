@@ -9,6 +9,8 @@ class JewelTest: LinearOpMode() {
     override fun runOpMode() {
         val jewel = Jewel(hardwareMap, this)
 
+        waitForStart()
+
         // Our color is RED, hit BLUE.
         jewel.hitJewel(Jewel.Color.RED)
     }

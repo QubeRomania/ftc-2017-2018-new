@@ -27,6 +27,18 @@ class Gamepad(private val gp: Gamepad) {
     val right_bumper
         get() = gp.right_bumper
 
+    val left_stick_x
+        get() = gp.left_stick_x
+
+    val left_stick_y
+        get() = gp.left_stick_y
+
+    val right_stick_x
+        get() = gp.right_stick_x
+
+    val right_stick_y
+        get() = gp.right_stick_y
+
     fun checkHold(button: Button): Boolean =
         when (button) {
             Button.A -> gp.a
