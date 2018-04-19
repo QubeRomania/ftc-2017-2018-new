@@ -12,11 +12,16 @@ class Jewel(hwMap: HardwareMap, private val opMode: LinearOpMode) {
     private val jewelHitServo = hwMap.servo["jewel_hit_servo"]
     private val colorSensor = hwMap.get(NormalizedColorSensor::class.java, "jewel_color")
 
-    companion object {
-        const val JEWEL_ARM_TOP_POSITION = 230.0 / 255.0
-        const val JEWEL_ARM_BOTTOM_POSITION = 0.0 / 255.0
+    init{
+        jewelServo.position = JEWEL_ARM_TOP_POSITION
+        jewelHitServo.position = 0.0
+    }
 
-        const val JEWEL_HIT_MIDDLE_POSITION = 119.0 / 255.0
+    companion object {
+        const val JEWEL_ARM_TOP_POSITION = 240.0 / 255.0
+        const val JEWEL_ARM_BOTTOM_POSITION = 30.0 / 255.0
+
+        const val JEWEL_HIT_MIDDLE_POSITION = 100.0 / 255.0
     }
 
     enum class Color {
@@ -42,13 +47,7 @@ class Jewel(hwMap: HardwareMap, private val opMode: LinearOpMode) {
 
     fun openJewelServo(open: Boolean) {
         if (open) {
-            var position = jewelServo.position
-            while (position >= JEWEL_ARM_BOTTOM_POSITION) {
-                position -= 0.1
-                jewelServo.position = position
-                opMode.waitMillis(200)
-            }
-            jewelServo.position = 0.0
+            jewelServo.position = JEWEL_ARM_BOTTOM_POSITION
         } else {
             jewelServo.position = JEWEL_ARM_TOP_POSITION
         }
@@ -57,15 +56,15 @@ class Jewel(hwMap: HardwareMap, private val opMode: LinearOpMode) {
     fun hitJewel(ourColor: Color) {
         // Set the jewel hitting servo to the middle position.
         jewelHitServo.position = JEWEL_HIT_MIDDLE_POSITION
-        opMode.waitMillis(200)
+        opMode.waitMillis(100)
 
         // Lower the jewel arm.
         openJewelServo(true)
-        opMode.waitMillis(800)
+        opMode.waitMillis(900)
 
         // Read the color and hit the right jewel.
         jewelHitServo.position = if(jewelColor == ourColor) 0.0 else 1.0
-        opMode.waitMillis(400)
+        opMode.waitMillis(200)
 
         // Revert to middle position.
         jewelHitServo.position = JEWEL_HIT_MIDDLE_POSITION
@@ -74,7 +73,7 @@ class Jewel(hwMap: HardwareMap, private val opMode: LinearOpMode) {
         openJewelServo(false)
 
         // Close hit servo.
-        jewelHitServo.position = 1.0
+        jewelHitServo.position = 0.0
         opMode.waitMillis(200)
     }
 }
