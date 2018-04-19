@@ -18,9 +18,9 @@ class RangeSensorTest: LinearOpMode() {
 
         waitForStart()
 
-        telemetry.addData("Left Distance", "%.1f mm", { leftDistance.getDistance(DistanceUnit.MM) })
-        telemetry.addData("Right Distance", "%.1f mm", { rightDistance.getDistance(DistanceUnit.MM) })
-        telemetry.addData("Back Distance", "%.1f mm", { backDistance.getDistance(DistanceUnit.MM) })
+        telemetry.addData("Left Distance", "%d cm", { leftDistance.rawUltrasonic() })
+        telemetry.addData("Right Distance", "%d cm", { rightDistance.rawUltrasonic() })
+        telemetry.addData("Back Distance", "%d cm", { backDistance.rawUltrasonic() })
 
         while (opModeIsActive()) {
             telemetry.update()
