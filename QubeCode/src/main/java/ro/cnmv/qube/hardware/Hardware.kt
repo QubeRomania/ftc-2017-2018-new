@@ -15,13 +15,17 @@ class Hardware(hwMap: HardwareMap, opMode: LinearOpMode) {
     val drop = CubesDrop(hwMap)
     val lift = CubesLift(hwMap, opMode.telemetry)
     val jewel = Jewel(hwMap, opMode)
-    val vuforia = Vuforia(hwMap.appContext)
+    //val vuforia = Vuforia(hwMap.appContext)
 
-    val backDistance = hwMap.get(ModernRoboticsI2cRangeSensor::class.java, "distance_back")
+    val leftDistance = hwMap.get(ModernRoboticsI2cRangeSensor::class.java, "distance_left")!!
+    val rightDistance = hwMap.get(ModernRoboticsI2cRangeSensor::class.java, "distance_right")!!
+    val backDistance = hwMap.get(ModernRoboticsI2cRangeSensor::class.java, "distance_back")!!
 
     init {
         gyro.calibrate(opMode)
 
+        leftDistance.i2cAddress = I2cAddr.create8bit(0x28)
+        rightDistance.i2cAddress = I2cAddr.create8bit(0x3a)
         backDistance.i2cAddress = I2cAddr.create8bit(0x4a)
     }
 
