@@ -15,6 +15,9 @@ class CubesDrop(hwMap: HardwareMap) {
 
         leftDropServo.scaleRange(40.0/255.0, 175.0/255.0)
         rightDropServo.scaleRange(130.0/255.0, 255.0/255.0)
+
+        leftDropServo.position = 0.0
+        rightDropServo.position = 0.0
     }
 
     fun withGamepad(gp: Gamepad) {
