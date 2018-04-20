@@ -83,32 +83,43 @@ abstract class OpMode: LinearOpMode() {
     fun runToColumn(side: Side, sideDistance: Double, backDistance: Double, heading: Double) {
         val backRangeSensor = hw.backRange
         val sideRangeSensor = if (side == Side.LEFT) hw.leftRange else hw.rightRange
+        val timer = ElapsedTime()
+        var lastTime = timer.milliseconds()
 
-        val headingCorrection = getHeadingCorrection(heading)
-        val sideDistanceCorrection = sideRangeSensor.getDistanceCorrection(heading, sideDistance)
-        val backDistanceCorrection = backRangeSensor.getDistanceCorrection(heading, backDistance)
+        do {
+            val headingCorrection = getHeadingCorrection(heading)
+            val sideDistanceCorrection = sideRangeSensor.getDistanceCorrection(heading, sideDistance)
+            val backDistanceCorrection = backRangeSensor.getDistanceCorrection(heading, backDistance)
 
-        val sideError = (sideDistance - sideRangeSensor.distance)
-        val backError = (backDistance - backRangeSensor.distance)
+            val sideError = (sideDistance - sideRangeSensor.distance)
+            val backError = (backDistance - backRangeSensor.distance)
 
-        val moveHeading = Math.atan2(sideError, backError) * 180.0 / Math.PI
+            val headingError = (heading - hw.gyro.heading).absoluteValue
+            val distError = Math.sqrt(sideError.pow(2) + backError.pow(2))
 
-        var speed = sqrt(backDistanceCorrection.pow(2) + sideDistanceCorrection.pow(2))
+            if (headingError > 1.0 || distError > sqrt(2.0))
+                lastTime = timer.milliseconds()
 
-        speed = Math.min(speed, 0.8)
+            val moveHeading = Math.atan2(sideError, backError) * 180.0 / Math.PI
 
-        if (speed < 0.1 && speed > 0.01)
-            speed = 0.1
+            var speed = sqrt(backDistanceCorrection.pow(2) + sideDistanceCorrection.pow(2))
 
-        hw.motors.move(moveHeading, speed, headingCorrection)
+            speed = Math.min(speed, 0.8)
 
-        telemetry.addData("Move Heading", "%.2f", moveHeading)
-        telemetry.addLine("Distance Correction")
-            .addData("Back", "%.2f", backDistanceCorrection)
-            .addData(side.toString(), "%.2f", sideDistanceCorrection)
-        telemetry.addLine("Distance")
-            .addData("Back", "%.2f", backDistance)
-            .addData(side.toString(), "%.2f", sideDistance)
+            if (speed < 0.1 && speed > 0.0001)
+                speed = 0.1
+
+            hw.motors.move(moveHeading, speed, headingCorrection)
+
+            telemetry.addData("Move Heading", "%.2f", moveHeading)
+            telemetry.addLine("Distance Correction")
+                .addData("Back", "%.2f", backDistanceCorrection)
+                .addData(side.toString(), "%.2f", sideDistanceCorrection)
+            telemetry.addLine("Distance")
+                .addData("Back", "%.2f", backDistance)
+                .addData(side.toString(), "%.2f", sideDistance)
+            telemetry.update()
+        } while (opModeIsActive() && timer.milliseconds() - lastTime < 2000)
     }
 
     fun goTo(distanceCm: Double) {
@@ -146,7 +157,7 @@ abstract class OpMode: LinearOpMode() {
 
             val absError = (targetHeading - hw.gyro.heading).absoluteValue
 
-            if (absError > 1.0)
+            if (absError > 0.0)
                 lastTime = timer.milliseconds()
 
             telemetry.addData("Rotation Correction", "%.2f", correction)
