@@ -19,8 +19,12 @@ class ControlOpMode: LinearOpMode() {
 
         waitForStart()
 
-        var velocityMode = false
+        var velocityMode = true
+        hw.motors.runWithConstantVelocity()
+
         telemetry.addData("Drive mode", { if (velocityMode) "VELOCITY" else "POWER" })
+
+        var cubesMode = false
 
         while (opModeIsActive()) {
             val direction = if (controlMode == DriveMode.RELATIVE)
@@ -45,14 +49,31 @@ class ControlOpMode: LinearOpMode() {
                 }
             }
 
-            /// CUBES INTAKE
-            hw.intake.withGamepad(gp2)
+            // TOGGLE CUBES / RELIC MODE
+            if (gp2.checkToggle(Gamepad.Button.START))
+                cubesMode = !cubesMode
 
-            /// CUBES DROP
-            hw.drop.withGamepad(gp2)
+            telemetry.addData("Mode", if (cubesMode) "CUBES" else "RELIC")
 
-            /// CUBES LIFT
-            hw.lift.withGamepad(gp2)
+            if (cubesMode) {
+                /// CUBES INTAKE
+                hw.intake.withGamepad(gp2)
+
+                /// CUBES DROP
+                hw.drop.withGamepad(gp2)
+
+                /// CUBES LIFT
+                hw.lift.withGamepad(gp2)
+            } else {
+                /// ARM EXTEND
+                hw.relicArm.open(gp2)
+
+                /// ARM HEIGHT
+                hw.relicArm.raise(gp2)
+
+                /// ARM GRAB
+                hw.relicArm.grab(gp1)
+            }
 
             /// DRIVE
             hw.motors.move(direction, speed, rotation)

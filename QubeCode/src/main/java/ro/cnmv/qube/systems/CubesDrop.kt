@@ -1,7 +1,9 @@
 package ro.cnmv.qube.systems
 
 import com.qualcomm.robotcore.hardware.HardwareMap
+import com.qualcomm.robotcore.hardware.Servo
 import ro.cnmv.qube.Gamepad
+
 
 class CubesDrop(hwMap: HardwareMap) {
     private val leftDropServo = hwMap.servo["left_drop_servo"]
@@ -9,8 +11,10 @@ class CubesDrop(hwMap: HardwareMap) {
     private var dropPosition = 0.0
 
     init {
-        leftDropServo.position = dropPosition
-        rightDropServo.position = dropPosition
+        //leftDropServo.direction = Servo.Direction.REVERSE
+
+        //leftDropServo.scaleRange(58.0/255.0, 166.0/255.0)
+        rightDropServo.scaleRange(130.0/255.0, 255.0/255.0)
     }
 
     fun withGamepad(gp: Gamepad) {
@@ -20,5 +24,8 @@ class CubesDrop(hwMap: HardwareMap) {
             gp.right_bumper -> 0.33
             else -> dropPosition
         }
+
+        //leftDropServo.position = dropPosition
+        rightDropServo.position = dropPosition
     }
 }

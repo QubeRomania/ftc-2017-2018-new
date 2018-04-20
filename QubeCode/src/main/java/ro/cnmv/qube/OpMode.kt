@@ -1,14 +1,12 @@
 package ro.cnmv.qube
 
-import android.support.annotation.MainThread
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.PIDCoefficients
 import com.qualcomm.robotcore.util.ElapsedTime
 import com.qualcomm.robotcore.util.Range
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import ro.cnmv.qube.hardware.Hardware
-import kotlin.math.absoluteValue
+import ro.cnmv.qube.hardware.sensors.RangeSensor
+import kotlin.math.*
 
 abstract class OpMode: LinearOpMode() {
     private val hw by lazy {
@@ -31,7 +29,7 @@ abstract class OpMode: LinearOpMode() {
     private var lastRotationError = 0.0
 
     fun getHeadingCorrection(targetHeading: Double): Double {
-        val pid = PIDCoefficients(1.6, 0.2, 0.4)
+        val pid = PIDCoefficients(0.8, 0.0, 1.5)
 
         // Determine the rotation error.
         val error = (targetHeading - hw.gyro.heading) / 90.0
@@ -43,24 +41,27 @@ abstract class OpMode: LinearOpMode() {
 
         lastRotationError = error
 
+        if (correction.absoluteValue < 0.1)
+            return 0.1 * correction.sign
+
         return Range.clip(correction, -1.0, 1.0)
     }
 
-    private var lastDistanceError = HashMap<ModernRoboticsI2cRangeSensor, Double>(3)
+    private var lastDistanceError = HashMap<RangeSensor, Double>(3)
 
-    fun ModernRoboticsI2cRangeSensor.getDistanceCorrection(targetDistance: Double): Double {
+    fun RangeSensor.getDistanceCorrection(targetAngle: Double, targetDistance: Double): Double {
         if (!lastDistanceError.containsKey(this))
             lastDistanceError[this] = 0.0
 
-        val pid = PIDCoefficients(1.0, 0.0, 0.0)
+        val pid = PIDCoefficients(1.0, 0.2, 0.4)
 
-        var distance = getDistance(DistanceUnit.CM)
+        val distance = distance * cos(((targetAngle - hw.gyro.heading) / 180.0 * Math.PI).absoluteValue)
 
         if (distance.isNaN())
             return 0.0
 
-        if (distance > 3000)
-            distance = 600.0
+        if (distance > 250)
+            return 0.0
 
         val error = (targetDistance - distance) / 100.0
 
@@ -71,6 +72,42 @@ abstract class OpMode: LinearOpMode() {
         lastDistanceError[this] = error
 
         return Range.clip(correction, -1.0, 1.0)
+    }
+
+    enum class Side(val sign: Double) {
+        LEFT(1.0),
+        RIGHT(-1.0)
+    }
+
+    fun runToColumn(side: Side, sideDistance: Double, backDistance: Double, heading: Double) {
+        val backRangeSensor = hw.backRange
+        val sideRangeSensor = if (side == Side.LEFT) hw.leftRange else hw.rightRange
+
+        val headingCorrection = getHeadingCorrection(heading)
+        val sideDistanceCorrection = sideRangeSensor.getDistanceCorrection(heading, sideDistance)
+        val backDistanceCorrection = backRangeSensor.getDistanceCorrection(heading, backDistance)
+
+        val sideError = (sideDistance - sideRangeSensor.distance)
+        val backError = (backDistance - backRangeSensor.distance)
+
+        val moveHeading = Math.atan2(sideError, backError) * 180.0 / Math.PI
+
+        var speed = sqrt(backDistanceCorrection.pow(2) + sideDistanceCorrection.pow(2))
+
+        speed = Math.min(speed, 0.8)
+
+        if (speed < 0.1 && speed > 0.01)
+            speed = 0.1
+
+        hw.motors.move(moveHeading, speed, headingCorrection)
+
+        telemetry.addData("Move Heading", "%.2f", moveHeading)
+        telemetry.addLine("Distance Correction")
+            .addData("Back", "%.2f", backDistanceCorrection)
+            .addData(side.toString(), "%.2f", sideDistanceCorrection)
+        telemetry.addLine("Distance")
+            .addData("Back", "%.2f", backDistance)
+            .addData(side.toString(), "%.2f", sideDistance)
     }
 }
 

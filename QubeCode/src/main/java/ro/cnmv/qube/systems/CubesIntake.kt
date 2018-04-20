@@ -3,6 +3,8 @@ package ro.cnmv.qube.systems
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
 import ro.cnmv.qube.Gamepad
+import kotlin.math.abs
+import kotlin.math.sign
 
 class CubesIntake(hwMap: HardwareMap) {
     private val leftIntake = hwMap.dcMotor["left_intake"]
@@ -18,12 +20,12 @@ class CubesIntake(hwMap: HardwareMap) {
     }
 
     fun withGamepad(gp: Gamepad) {
-        leftIntake.power = roundPower(-gp.left_stick_y)
-        rightIntake.power = roundPower(-gp.right_stick_y)
+        leftIntake.power = roundPower(gp.left_stick_y)
+        rightIntake.power = roundPower(gp.right_stick_y)
     }
 
     private companion object {
-        /// Rounds a number to nearest multiple of 0.5
-        private fun roundPower(power: Float): Double = Math.round(power * 2) / 2.0
+        private fun roundPower(power: Float): Double = if(abs(power) > 0.3) 0.85* sign(power) else 0.0
+
     }
 }

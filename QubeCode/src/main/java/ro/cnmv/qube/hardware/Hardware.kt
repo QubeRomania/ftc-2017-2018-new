@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.I2cAddr
 import ro.cnmv.qube.hardware.sensors.PhoneGyro
+import ro.cnmv.qube.hardware.sensors.RangeSensor
 import ro.cnmv.qube.systems.*
 
 class Hardware(hwMap: HardwareMap, opMode: LinearOpMode) {
@@ -15,18 +16,15 @@ class Hardware(hwMap: HardwareMap, opMode: LinearOpMode) {
     val drop = CubesDrop(hwMap)
     val lift = CubesLift(hwMap, opMode.telemetry)
     val jewel = Jewel(hwMap, opMode)
-    val vuforia = Vuforia(hwMap.appContext)
+    //val vuforia = Vuforia(hwMap.appContext)
+    val relicArm = RelicArm(hwMap)
 
-    val leftDistance = hwMap.get(ModernRoboticsI2cRangeSensor::class.java, "distance_left")!!
-    val rightDistance = hwMap.get(ModernRoboticsI2cRangeSensor::class.java, "distance_right")!!
-    val backDistance = hwMap.get(ModernRoboticsI2cRangeSensor::class.java, "distance_back")!!
+    val leftRange = RangeSensor(hwMap, "distance_left", 0x28)
+    val rightRange = RangeSensor(hwMap, "distance_right", 0x3a)
+    val backRange = RangeSensor(hwMap,"distance_back", 0x4a)
 
     init {
         gyro.calibrate(opMode)
-
-        leftDistance.i2cAddress = I2cAddr.create8bit(0x28)
-        rightDistance.i2cAddress = I2cAddr.create8bit(0x3a)
-        backDistance.i2cAddress = I2cAddr.create8bit(0x4a)
     }
 
     fun stop() {

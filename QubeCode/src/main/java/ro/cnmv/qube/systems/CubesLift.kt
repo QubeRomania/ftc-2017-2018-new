@@ -14,6 +14,7 @@ class CubesLift(hwMap: HardwareMap, private val telemetry: Telemetry) {
 
         liftMotor.targetPosition = 0
         liftMotor.mode = DcMotor.RunMode.RUN_TO_POSITION
+        liftMotor.power = 1.0
     }
 
     companion object {
@@ -21,7 +22,7 @@ class CubesLift(hwMap: HardwareMap, private val telemetry: Telemetry) {
 
         const val LIFT_BOTTOM = 0
         // TODO: MIDDLE
-        const val LIFT_TOP = 1500
+        const val LIFT_TOP = 1650
     }
 
     fun withGamepad(gp: Gamepad) {
