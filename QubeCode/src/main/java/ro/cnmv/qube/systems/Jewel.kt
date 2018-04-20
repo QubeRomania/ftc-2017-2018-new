@@ -18,8 +18,8 @@ class Jewel(hwMap: HardwareMap, private val opMode: LinearOpMode) {
     }
 
     companion object {
-        const val JEWEL_ARM_TOP_POSITION = 230.0 / 255.0
-        const val JEWEL_ARM_BOTTOM_POSITION = 65.0 / 255.0
+        const val JEWEL_ARM_TOP_POSITION = 250.0 / 255.0
+        const val JEWEL_ARM_BOTTOM_POSITION = 0.0 / 255.0
 
         const val JEWEL_HIT_MIDDLE_POSITION = 100.0 / 255.0
     }
@@ -74,6 +74,6 @@ class Jewel(hwMap: HardwareMap, private val opMode: LinearOpMode) {
 
         // Close hit servo.
         jewelHitServo.position = 0.0
-        opMode.waitMillis(200)
+        opMode.waitMillis(1000)
     }
 }

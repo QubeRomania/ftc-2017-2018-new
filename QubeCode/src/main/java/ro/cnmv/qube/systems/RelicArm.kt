@@ -19,8 +19,8 @@ class RelicArm(hwMap: HardwareMap) {
         private const val ARM_OPEN_POSITION = 830
         private const val ARM_CLOSED_POSITION = 0
 
-        private const val ARM_OPEN_HEIGHT = 1.0
-        private const val ARM_CLOSED_HEIGHT = 0.0
+        private const val ARM_OPEN_HEIGHT = 0.0
+        private const val ARM_CLOSED_HEIGHT = 1.0
 
         private const val ARM_GRAB_POSITION = 185.0/255.0
         private const val ARM_RELEASE_POSITION = 0.0

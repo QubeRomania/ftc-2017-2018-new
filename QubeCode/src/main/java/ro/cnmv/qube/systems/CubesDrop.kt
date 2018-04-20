@@ -11,9 +11,9 @@ class CubesDrop(hwMap: HardwareMap) {
     private var dropPosition = 0.0
 
     init {
-        //leftDropServo.direction = Servo.Direction.REVERSE
+        leftDropServo.direction = Servo.Direction.REVERSE
 
-        //leftDropServo.scaleRange(58.0/255.0, 166.0/255.0)
+        leftDropServo.scaleRange(40.0/255.0, 175.0/255.0)
         rightDropServo.scaleRange(130.0/255.0, 255.0/255.0)
     }
 
@@ -25,7 +25,7 @@ class CubesDrop(hwMap: HardwareMap) {
             else -> dropPosition
         }
 
-        //leftDropServo.position = dropPosition
+        leftDropServo.position = dropPosition
         rightDropServo.position = dropPosition
     }
 }

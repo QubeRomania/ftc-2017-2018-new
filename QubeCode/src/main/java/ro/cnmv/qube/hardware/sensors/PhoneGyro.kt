@@ -48,6 +48,10 @@ class PhoneGyro(hwMap: HardwareMap): SensorEventListener, OrientationSensor, Gyr
     var accuracy = Accuracy.UNKNOWN
         private set
 
+    fun resetOffset(angle: Double) {
+        zOffset += angle.toFloat()
+    }
+
     private var requestZAxisReset = false
 
     init {

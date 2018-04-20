@@ -1,6 +1,7 @@
 package ro.cnmv.qube
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.PIDCoefficients
 import com.qualcomm.robotcore.util.ElapsedTime
 import com.qualcomm.robotcore.util.Range
@@ -9,7 +10,7 @@ import ro.cnmv.qube.hardware.sensors.RangeSensor
 import kotlin.math.*
 
 abstract class OpMode: LinearOpMode() {
-    private val hw by lazy {
+    protected val hw by lazy {
         Hardware(hardwareMap, this)
     }
 
@@ -41,7 +42,7 @@ abstract class OpMode: LinearOpMode() {
 
         lastRotationError = error
 
-        if (correction.absoluteValue < 0.1)
+        if (correction.absoluteValue < 0.1 && correction.absoluteValue > 0.01)
             return 0.1 * correction.sign
 
         return Range.clip(correction, -1.0, 1.0)
@@ -108,6 +109,50 @@ abstract class OpMode: LinearOpMode() {
         telemetry.addLine("Distance")
             .addData("Back", "%.2f", backDistance)
             .addData(side.toString(), "%.2f", sideDistance)
+    }
+
+    fun goTo(distanceCm: Double) {
+        with (hw.motors) {
+            resetPosition()
+            setTargetPosition(distanceCm.toInt())
+            translate(0.0, 1.0)
+            runToPosition()
+            while (opModeIsActive() && areBusy) {
+                printPosition(telemetry)
+                telemetry.update()
+            }
+            stop()
+            runWithConstantVelocity()
+        }
+    }
+
+    fun runWithVelocity(velocity: Double, time: Long) {
+        with (hw.motors) {
+            runWithConstantVelocity()
+            translate(0.0, velocity)
+            val timer = ElapsedTime()
+            while (opModeIsActive() && timer.milliseconds() < time)
+                ;
+            stop()
+        }
+    }
+
+    fun rotateTo(targetHeading: Double) {
+        val timer = ElapsedTime()
+        var lastTime = timer.milliseconds()
+        do {
+            val correction = getHeadingCorrection(targetHeading)
+            hw.motors.rotate(correction)
+
+            val absError = (targetHeading - hw.gyro.heading).absoluteValue
+
+            if (absError > 1.0)
+                lastTime = timer.milliseconds()
+
+            telemetry.addData("Rotation Correction", "%.2f", correction)
+            telemetry.update()
+        } while (opModeIsActive() && timer.milliseconds() - lastTime < 1000)
+        hw.motors.stop()
     }
 }
 

@@ -8,6 +8,8 @@ abstract class AutonomyBase: OpMode() {
     protected abstract val ourColor: Jewel.Color
 
     override fun Hardware.run() {
+        motors.runWithConstantVelocity()
+
         //vuforia.activate()
 
         jewel.hitJewel(ourColor)
@@ -15,8 +17,10 @@ abstract class AutonomyBase: OpMode() {
         //vuforia.deactivate()
 
         runAutonomy()
+
+        stop()
     }
 
 
-    abstract fun Hardware.runAutonomy()
+    abstract fun runAutonomy()
 }

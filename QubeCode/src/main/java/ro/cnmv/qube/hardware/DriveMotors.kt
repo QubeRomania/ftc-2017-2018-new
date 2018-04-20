@@ -1,5 +1,8 @@
 package ro.cnmv.qube.hardware
 
+import android.support.annotation.IntegerRes
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction
 import com.qualcomm.robotcore.hardware.HardwareMap
@@ -49,6 +52,13 @@ class DriveMotors(hwMap: HardwareMap) {
     val backRightMotor
         get() = motors[3]
 
+    val areBusy
+        get() = motors.all { it.isBusy }
+
+    fun setTargetPosition(position: Int) {
+        motors.forEach { it.targetPosition = position }
+    }
+
     /// Sets the power of the motors.
     private fun setPower(power: MotorPower) =
         power.values.zip(motors).map { (power, motor) -> motor.power = power }
@@ -78,6 +88,10 @@ class DriveMotors(hwMap: HardwareMap) {
             it.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
             it.mode = DcMotor.RunMode.RUN_USING_ENCODER
         }
+    }
+
+    fun runToPosition() {
+        motors.forEach { it.mode = DcMotor.RunMode.RUN_TO_POSITION }
     }
 
     /// Stops the motors and resets their encoders.
