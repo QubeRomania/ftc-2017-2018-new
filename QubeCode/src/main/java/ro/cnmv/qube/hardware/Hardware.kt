@@ -16,7 +16,7 @@ class Hardware(hwMap: HardwareMap, opMode: LinearOpMode) {
     val drop = CubesDrop(hwMap)
     val lift = CubesLift(hwMap, opMode.telemetry)
     val jewel = Jewel(hwMap, opMode)
-    //val vuforia = Vuforia(hwMap.appContext)
+    val vuforia = Vuforia(hwMap.appContext)
     val relicArm = RelicArm(hwMap)
 
     val leftRange = RangeSensor(hwMap, "distance_left", 0x28)
