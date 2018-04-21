@@ -28,7 +28,7 @@ class Vuforia(context: Context) {
         val parameters = VuforiaLocalizer.Parameters(cameraMonitorViewId)
 
         parameters.vuforiaLicenseKey = LICENSE_KEY
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT
 
         vuforiaLocalizer = ClassFactory.createVuforiaLocalizer(parameters)
 

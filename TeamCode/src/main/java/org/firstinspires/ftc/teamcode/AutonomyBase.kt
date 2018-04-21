@@ -27,6 +27,8 @@ abstract class AutonomyBase: OpMode() {
         Thread {
             vuforia.deactivate()
         }.start()
+
+        hw.drop.grabCube(true)
     }
 
     override fun Hardware.run() {
@@ -86,6 +88,6 @@ abstract class AutonomyBase: OpMode() {
                 .addData("Back", "%.2f", backDistance)
                 .addData(side.toString(), "%.2f", sideDistance)
             telemetry.update()
-        } while (opModeIsActive() && timer.milliseconds() - lastTime < 2000)
+        } while (opModeIsActive() && timer.milliseconds() - lastTime < 300)
     }
 }

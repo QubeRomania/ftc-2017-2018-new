@@ -21,6 +21,9 @@ abstract class OpMode: LinearOpMode() {
 
         waitForStart()
 
+        if (!opModeIsActive())
+            return
+
         hw.run()
 
         hw.stop()
@@ -90,11 +93,12 @@ abstract class OpMode: LinearOpMode() {
         RIGHT
     }
 
-    fun goTo(distanceCm: Double) {
+    fun goTo(distanceCm: Double, targetHeading: Double) {
         with (hw.motors) {
             resetPosition()
             setTargetPosition(distanceCm.toInt())
-            translate(0.0, 1.0)
+            val correction = getHeadingCorrection(targetHeading)
+            move(0.0, 0.6, correction)
             runToPosition()
             while (opModeIsActive() && areBusy) {
                 printPosition(telemetry)
@@ -130,7 +134,7 @@ abstract class OpMode: LinearOpMode() {
 
             telemetry.addData("Rotation Correction", "%.2f", correction)
             telemetry.update()
-        } while (opModeIsActive() && timer.milliseconds() - lastTime < 1000)
+        } while (opModeIsActive() && timer.milliseconds() - lastTime < 300)
         hw.motors.stop()
     }
 }

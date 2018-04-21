@@ -51,6 +51,13 @@ class CubesLift(hwMap: HardwareMap, private val telemetry: Telemetry) {
         }
     }
 
+    fun liftAuto(raised: Boolean) {
+        if (raised)
+            liftPosition(LIFT_TOP)
+        else
+            liftPosition(LIFT_BOTTOM)
+    }
+
     fun liftPosition(position: Int) {
         liftMotor.targetPosition = position
         liftMotor.mode = DcMotor.RunMode.RUN_TO_POSITION
