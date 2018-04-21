@@ -12,5 +12,6 @@ class RangeSensor(hwMap: HardwareMap, name: String, addr: Int) {
         range.i2cAddress = I2cAddr.create8bit(addr)
     }
 
-    val distance: Double get() = range.getDistance(DistanceUnit.CM)
+    val distance
+        get() = range.getDistance(DistanceUnit.CM)
 }

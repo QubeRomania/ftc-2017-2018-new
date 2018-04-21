@@ -13,11 +13,11 @@ class RangeSensorTest: LinearOpMode() {
 
         waitForStart()
 
+        telemetry.addData("Left Distance", "%.2f cm", { leftRange.distance })
+        telemetry.addData("Right Distance", "%.2f cm", { rightRange.distance })
+        telemetry.addData("Back Distance", "%.2f cm", { backRange.distance })
+
         while (opModeIsActive()) {
-            telemetry.clear()
-            telemetry.addData("Left Distance", "%.2f cm", { leftRange.distance })
-            telemetry.addData("Right Distance", "%.2f cm", { rightRange.distance })
-            telemetry.addData("Back Distance", "%.2f cm", { backRange.distance })
             telemetry.update()
         }
     }
