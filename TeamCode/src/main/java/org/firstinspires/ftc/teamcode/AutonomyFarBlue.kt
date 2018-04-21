@@ -10,7 +10,7 @@ class AutonomyFarBlue: AutonomyBase() {
     override val ourColor = Jewel.Color.BLUE
 
     override fun runAutonomy() {
-        runWithVelocity(0.5, 1500)
+        runWithVelocity(0.3, 2000)
 
         rotateTo(-90.0)
 
@@ -18,11 +18,16 @@ class AutonomyFarBlue: AutonomyBase() {
         waitMillis(50)
 
         goTo(1500.0)
+        runToColumn(Side.RIGHT, 120.0, 50.0, 0.0)
+        waitMillis(1000)
 
-        val timer = ElapsedTime()
-        while (opModeIsActive() && timer.milliseconds() < 10000) {
-            runToColumn(Side.RIGHT, 120.0, 50.0, 0.0)
-            telemetry.update()
-        }
+        goTo(1500.0)
+        runToColumn(Side.RIGHT, 103.0,50.0, 0.0)
+        waitMillis(1000)
+
+
+        goTo(1500.0)
+        runToColumn(Side.RIGHT, 138.0, 50.0, 0.0)
+        waitMillis(1000)
     }
 }

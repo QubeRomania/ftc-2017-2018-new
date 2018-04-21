@@ -56,11 +56,8 @@ class RelicArm(hwMap: HardwareMap) {
     }
 
     fun grab(gp: Gamepad) {
-        if (gp.checkToggle(Gamepad.Button.A)) {
-            isGrabbed = !isGrabbed
-
-            grabServo.position = if (isGrabbed) ARM_GRAB_POSITION else ARM_RELEASE_POSITION
-        }
+        isGrabbed = gp.checkToggle(Gamepad.Button.A)
+        grabServo.position = if (isGrabbed) ARM_GRAB_POSITION else ARM_RELEASE_POSITION
     }
 
     fun printTelemetry(telemetry: Telemetry) {

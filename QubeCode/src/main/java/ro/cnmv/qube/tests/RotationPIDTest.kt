@@ -18,13 +18,13 @@ class RotationPIDTest : OpMode() {
         gyro.enableTelemetry(telemetry)
 
         while (opModeIsActive()) {
-            if (gp1.checkToggle(Gamepad.Button.A))
+            if (gp1.wasFalseAndItsTrue(Gamepad.Button.A))
                 targetHeading += 5.0
 
-            if (gp1.checkToggle(Gamepad.Button.B))
+            if (gp1.wasFalseAndItsTrue(Gamepad.Button.B))
                 targetHeading -= 5.0
 
-            if (gp1.checkToggle(Gamepad.Button.X)) {
+            if (gp1.wasFalseAndItsTrue(Gamepad.Button.X)) {
                 rotateTo(targetHeading)
             }
 

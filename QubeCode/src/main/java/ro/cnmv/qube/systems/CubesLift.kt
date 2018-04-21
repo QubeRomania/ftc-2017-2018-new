@@ -26,8 +26,7 @@ class CubesLift(hwMap: HardwareMap, private val telemetry: Telemetry) {
     }
 
     fun withGamepad(gp: Gamepad) {
-        if (gp.checkToggle(Gamepad.Button.LEFT_BUMPER))
-            manualMode = !manualMode
+        manualMode = gp.checkToggle(Gamepad.Button.LEFT_BUMPER)
 
         telemetry.addData("Mode", if (manualMode) "Manual" else "Auto")
 

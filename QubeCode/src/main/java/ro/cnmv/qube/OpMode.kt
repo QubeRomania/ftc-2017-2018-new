@@ -42,7 +42,7 @@ abstract class OpMode: LinearOpMode() {
 
         lastRotationError = error
 
-        if (correction.absoluteValue < 0.1 && correction.absoluteValue > 0.01)
+        if (correction.absoluteValue < 0.1 && correction.absoluteValue > 0.001)
             return 0.1 * correction.sign
 
         return Range.clip(correction, -1.0, 1.0)
@@ -54,7 +54,7 @@ abstract class OpMode: LinearOpMode() {
         if (!lastDistanceError.containsKey(this))
             lastDistanceError[this] = 0.0
 
-        val pid = PIDCoefficients(1.0, 0.2, 0.4)
+        val pid = PIDCoefficients(1.5, 0.5, 0.8)
 
         val distance = distance * cos(((targetAngle - hw.gyro.heading) / 180.0 * Math.PI).absoluteValue)
 
@@ -95,9 +95,9 @@ abstract class OpMode: LinearOpMode() {
             val backError = (backDistance - backRangeSensor.distance)
 
             val headingError = (heading - hw.gyro.heading).absoluteValue
-            val distError = Math.sqrt(sideError.pow(2) + backError.pow(2))
+            val distError = sideError.absoluteValue//Math.sqrt(sideError.pow(2) + backError.pow(2))
 
-            if (headingError > 1.0 || distError > sqrt(2.0))
+            if (headingError > 1.0 || distError > 1.0/*sqrt(2.0)*/)
                 lastTime = timer.milliseconds()
 
             val moveHeading = Math.atan2(sideError, backError) * 180.0 / Math.PI

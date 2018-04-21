@@ -34,24 +34,21 @@ class ControlOpMode: LinearOpMode() {
 
             /// ABSOLUTE / RELATIVE CONTROL MODE
             if (gp1.checkToggle(Gamepad.Button.X))
-                controlMode = controlMode.inv()
-
-            if (gp1.checkToggle(Gamepad.Button.Y))
-                hw.gyro.resetZAxisIntegrator()
+                controlMode = DriveMode.ABSOLUTE
+            else
+                controlMode = DriveMode.RELATIVE
 
             /// VELOCITY / POWER MODE
-            if (gp1.checkToggle(Gamepad.Button.B)) {
-                velocityMode = !velocityMode
-                if (velocityMode) {
-                    hw.motors.runWithConstantVelocity()
-                } else {
-                    hw.motors.disableEncoders()
-                }
+            velocityMode = gp1.checkToggle(Gamepad.Button.B)
+            if (velocityMode) {
+                hw.motors.runWithConstantVelocity()
+            } else {
+                hw.motors.disableEncoders()
             }
 
+
             // TOGGLE CUBES / RELIC MODE
-            if (gp2.checkToggle(Gamepad.Button.START))
-                cubesMode = !cubesMode
+            cubesMode = gp2.checkToggle(Gamepad.Button.START)
 
             telemetry.addData("Mode", if (cubesMode) "CUBES" else "RELIC")
 

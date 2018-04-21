@@ -14,6 +14,7 @@ class Gamepad(private val gp: Gamepad) {
     }
 
     private var lastStates = Button.values().map { it to false }.toMap().toMutableMap()
+    private var currentState = Button.values().map { it to false }.toMap().toMutableMap()
 
     val left_trigger
         get() = gp.left_trigger
@@ -53,8 +54,17 @@ class Gamepad(private val gp: Gamepad) {
     fun checkToggle(button : Button): Boolean {
         val pressed = checkHold(button)
         val ok = pressed && lastStates[button] != pressed
+        if (ok) {
+            currentState[button] = !currentState[button]!!
+        }
+        lastStates[button] = pressed
+        return currentState[button]!!
+    }
+
+    fun wasFalseAndItsTrue(button: Button) : Boolean {
+        val pressed = checkHold(button)
+        val ok = pressed && lastStates[button] != pressed
         lastStates[button] = pressed
         return ok
     }
-
 }
