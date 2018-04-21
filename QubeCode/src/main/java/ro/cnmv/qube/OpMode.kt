@@ -17,12 +17,16 @@ abstract class OpMode: LinearOpMode() {
     final override fun runOpMode() {
         hw.stop()
 
+        preInit()
+
         waitForStart()
 
         hw.run()
 
         hw.stop()
     }
+
+    open fun preInit() {}
 
     /// Runs the op mode.
     abstract fun Hardware.run()
