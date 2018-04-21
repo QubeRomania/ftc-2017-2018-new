@@ -7,6 +7,10 @@ import ro.cnmv.qube.systems.Jewel
 class AutonomyNearBlue: AutonomyBase() {
     override val ourColor = Jewel.Color.BLUE
 
+    override val leftColumn = Pair(50.0, 50.0)
+    override val centerColumn = Pair(50.0, 50.0)
+    override val rightColumn = Pair(50.0, 50.0)
+
     override fun runAutonomy() {
 
     }

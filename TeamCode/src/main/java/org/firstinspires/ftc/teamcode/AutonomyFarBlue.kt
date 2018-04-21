@@ -9,6 +9,10 @@ import ro.cnmv.qube.waitMillis
 class AutonomyFarBlue: AutonomyBase() {
     override val ourColor = Jewel.Color.BLUE
 
+    override val leftColumn = Pair(103.0, 50.0)
+    override val centerColumn = Pair(120.0, 50.0)
+    override val rightColumn = Pair(138.0, 50.0)
+
     override fun runAutonomy() {
         runWithVelocity(0.3, 2000)
 
