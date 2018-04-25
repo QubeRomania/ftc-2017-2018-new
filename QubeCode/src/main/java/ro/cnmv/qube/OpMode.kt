@@ -1,7 +1,6 @@
 package ro.cnmv.qube
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.PIDCoefficients
 import com.qualcomm.robotcore.util.ElapsedTime
 import com.qualcomm.robotcore.util.Range
@@ -217,8 +216,8 @@ abstract class OpMode: LinearOpMode() {
 
             speed = Math.min(speed, 0.8)
 
-            if (speed < 0.1 && speed > 0.0001)
-                speed = 0.1
+            if (speed < 0.05 && speed > 0.0001)
+                speed = 0.05
 
             hw.motors.move(moveHeading, speed, headingCorrection)
 

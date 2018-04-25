@@ -20,10 +20,10 @@ abstract class AutonomyBase: OpMode() {
     protected abstract val leftColumn: Double
     protected abstract val centerColumn: Double
     protected abstract val rightColumn: Double
-
+    protected abstract val backDistance: Double
     override fun preInit() {
         Thread {
-            vuforia.deactivate()
+            vuforia.activate()
         }.start()
 
         hw.drop.grabCube(true)
@@ -31,8 +31,6 @@ abstract class AutonomyBase: OpMode() {
 
     override fun Hardware.run() {
         motors.runWithConstantVelocity()
-
-        vuforia.activate()
 
         jewel.hitJewel(ourColor)
 
@@ -57,7 +55,7 @@ abstract class AutonomyBase: OpMode() {
     fun runToColumn() {
         val sideColumnDistance = vuMark.distance
 
-        runToColumn(side, sideColumnDistance, 50.0, 0.0)
+        runToColumn(side, sideColumnDistance,  backDistance, 0.0)
     }
 
     fun grabCubesAuto() = grabCubeAuto(side, centerColumn, vuMark.distance)

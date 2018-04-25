@@ -13,15 +13,34 @@ class AutonomyNearRed: AutonomyBase() {
     override val leftColumn = 81.0
     override val centerColumn = 63.0
     override val rightColumn = 46.0
+    override val backDistance = 30.0
 
     override fun runAutonomy() {
-        runWithVelocity(0.3, 2000)
+        runWithVelocity(-0.3, 2000)
+
+        rotateTo( 90.0)
+
+        hw.gyro.resetZAxisIntegrator()
+        waitMillis(50)
+
+        runWithVelocity(0.8, 250)
 
         rotateTo(-90.0)
 
         hw.gyro.resetZAxisIntegrator()
         waitMillis(50)
 
+        rotateTo(0.0)
+
+        hw.gyro.resetZAxisIntegrator()
+
+        runToColumn()
+
+        rotateTo(0.0)
+
+        waitMillis(50)
+
+/*
         hw.drop.grabCube(false)
         hw.intake.intake(-0.87)
 
@@ -32,12 +51,15 @@ class AutonomyNearRed: AutonomyBase() {
 
         hw.intake.intake(0.0)
         rotateTo(0.0)
+*/
+
+
 
         // Raise the cube plate
         hw.drop.dropAuto(true)
 
         // Go towards cryptobox
-        goTo(-600.0, 0.0)
+        goTo(-350.0, 0.0)
 
         rotateTo(0.0)
 
@@ -47,7 +69,7 @@ class AutonomyNearRed: AutonomyBase() {
         hw.drop.grabCube(false)
         waitMillis(500)
 
-        goTo(400.0, 0.0)
+        goTo(250.0, 0.0)
         hw.drop.grabCube(true)
         waitMillis(500)
 

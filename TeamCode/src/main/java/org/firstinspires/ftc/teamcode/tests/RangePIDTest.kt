@@ -19,8 +19,8 @@ class RangePIDTest: OpMode() {
         gyro.enableTelemetry(telemetry)
 
         while (opModeIsActive()) {
-            val targetRightDistance = 137.0
-            val targetBackDistance = 50.0
+            val targetRightDistance = 10.0
+            val targetBackDistance = 30.0
 
             val headingCorrection = getHeadingCorrection(0.0)
             val rightDistanceCorrection = rightRange.getDistanceCorrection(0.0, targetRightDistance)
@@ -31,8 +31,8 @@ class RangePIDTest: OpMode() {
             var speed = sqrt((backDistanceCorrection * backDistanceCorrection) + (rightDistanceCorrection * rightDistanceCorrection))
 
             speed = Math.min(speed, 0.8)
-            if (speed < 0.1 && speed > 0.01)
-                speed = 0.1
+            if (speed < 0.07 && speed > 0.01)
+                speed = 0.07
 
             motors.move(moveHeading, speed, headingCorrection)
 

@@ -8,36 +8,30 @@ import ro.cnmv.qube.waitMillis
 class AutonomyFarRed: AutonomyBase() {
     override val ourColor = Jewel.Color.RED
 
-    override val side = Side.RIGHT
+    override val side = Side.LEFT
 
-    override val leftColumn = 135.0
-    override val centerColumn = 117.0
-    override val rightColumn = 100.0
+    override val leftColumn = 138.0
+    override val centerColumn = 121.0
+    override val rightColumn = 104.0
+    override val backDistance = 50.0
 
     override fun runAutonomy() {
-        runWithVelocity(0.3, 2000)
+        runWithVelocity(-0.3, 2000)
 
         rotateTo(-90.0)
 
         hw.gyro.resetZAxisIntegrator()
         waitMillis(50)
 
-        hw.drop.grabCube(false)
-        hw.intake.intake(-0.87)
-
-        runToColumn(side, centerColumn, 100.0, 0.0)
-        hw.drop.grabCube(true)
-
         runToColumn()
 
-        hw.intake.intake(0.0)
         rotateTo(0.0)
 
         // Raise the cube plate
         hw.drop.dropAuto(true)
 
         // Go towards cryptobox
-        goTo(-600.0, 0.0)
+        goTo(-650.0, 0.0)
 
         rotateTo(0.0)
 

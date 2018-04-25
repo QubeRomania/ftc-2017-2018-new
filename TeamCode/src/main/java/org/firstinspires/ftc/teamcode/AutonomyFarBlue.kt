@@ -13,6 +13,7 @@ class AutonomyFarBlue: AutonomyBase() {
     override val leftColumn = 103.0
     override val centerColumn = 120.0
     override val rightColumn = 138.0
+    override val backDistance = 50.0
 
     override fun runAutonomy() {
         // Get off the balancing stone.
@@ -25,7 +26,7 @@ class AutonomyFarBlue: AutonomyBase() {
         hw.gyro.resetZAxisIntegrator()
         waitMillis(50)
 
-        // Release cube grabber.
+   /*     // Release cube grabber.
         hw.drop.grabCube(false)
         // Turn on intake motors.
         hw.intake.intake(-0.87)
@@ -39,6 +40,9 @@ class AutonomyFarBlue: AutonomyBase() {
         runToColumn()
 
         hw.intake.intake(0.0)
+        rotateTo(0.0)
+*/
+        runToColumn()
         rotateTo(0.0)
 
         // Raise the cube plate
