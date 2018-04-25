@@ -16,11 +16,11 @@ class RelicArm(hwMap: HardwareMap) {
     private var isGrabbed = false
 
     companion object {
-        private const val ARM_OPEN_POSITION = 830
+        private const val ARM_OPEN_POSITION = -830
         private const val ARM_CLOSED_POSITION = 0
 
-        private const val ARM_OPEN_HEIGHT = 0.0
-        private const val ARM_CLOSED_HEIGHT = 1.0
+        private const val ARM_OPEN_HEIGHT = 1.0
+        private const val ARM_CLOSED_HEIGHT = 0.0
 
         private const val ARM_GRAB_POSITION = 185.0/255.0
         private const val ARM_RELEASE_POSITION = 0.0
@@ -41,7 +41,7 @@ class RelicArm(hwMap: HardwareMap) {
     fun open(gp: Gamepad) {
         extendPosition += ((gp.right_trigger - gp.left_trigger) * 10).toInt()
 
-        //extendPosition = Range.clip(extendPosition, ARM_CLOSED_POSITION, ARM_OPEN_POSITION)
+        extendPosition = Range.clip(extendPosition, ARM_OPEN_POSITION, ARM_CLOSED_POSITION)
 
         armMotor.targetPosition = extendPosition
     }
@@ -56,8 +56,10 @@ class RelicArm(hwMap: HardwareMap) {
     }
 
     fun grab(gp: Gamepad) {
-        isGrabbed = gp.checkToggle(Gamepad.Button.A)
-        grabServo.position = if (isGrabbed) ARM_GRAB_POSITION else ARM_RELEASE_POSITION
+        if (gp.checkToggle(Gamepad.Button.A)) {
+            isGrabbed = !isGrabbed
+            grabServo.position = if (isGrabbed) ARM_GRAB_POSITION else ARM_RELEASE_POSITION
+        }
     }
 
     fun printTelemetry(telemetry: Telemetry) {

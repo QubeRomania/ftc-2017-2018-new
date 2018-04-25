@@ -35,6 +35,9 @@ class DriveMotors(hwMap: HardwareMap) {
         // Set its direction.
         motor.direction = direction
 
+        // Set the motor zero power mode to float.
+        motor.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
+
         motor.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
 
         motor

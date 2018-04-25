@@ -24,7 +24,7 @@ class ControlOpMode: LinearOpMode() {
 
         telemetry.addData("Drive mode", { if (velocityMode) "VELOCITY" else "POWER" })
 
-        var cubesMode = false
+        var cubesMode = true
 
         while (opModeIsActive()) {
             val direction = if (controlMode == DriveMode.RELATIVE)

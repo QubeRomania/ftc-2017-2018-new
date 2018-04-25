@@ -25,7 +25,7 @@ class CubesIntake(hwMap: HardwareMap) {
     }
 
     private companion object {
-        private fun roundPower(power: Float): Double = if(abs(power) > 0.3) 0.87 * sign(power) else 0.0
+        private fun roundPower(power: Float): Double = if(abs(power) > 0.3) 0.80 * sign(power) else 0.0
 
     }
 }

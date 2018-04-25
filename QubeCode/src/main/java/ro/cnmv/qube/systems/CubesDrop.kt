@@ -35,11 +35,8 @@ class CubesDrop(hwMap: HardwareMap) {
             else -> dropPosition
         }
 
-        if(gp.checkToggle(Gamepad.Button.X)) {
-            grabState = !grabState
-
-            grabCube(grabState)
-        }
+        grabState = gp.right_trigger > 0.7 || gp.left_trigger > 0.7
+        grabCube(grabState)
 
         leftDropServo.position = dropPosition
         rightDropServo.position = dropPosition
@@ -51,7 +48,7 @@ class CubesDrop(hwMap: HardwareMap) {
             rightDropServo.position = 1.0
         } else {
             leftDropServo.position = 0.0
-            rightDropServo.position = 0.0
+           rightDropServo.position = 0.0
         }
     }
 

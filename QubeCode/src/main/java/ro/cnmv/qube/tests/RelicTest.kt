@@ -17,6 +17,10 @@ class RelicTest: LinearOpMode() {
         while(opModeIsActive()) {
             relicArm.open(gp)
 
+            relicArm.grab(gp)
+
+            relicArm.raise(gp)
+
             relicArm.printTelemetry(telemetry)
             telemetry.update()
         }
